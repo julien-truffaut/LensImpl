@@ -28,7 +28,7 @@ object MatrixFormatter {
 
   def toCSVRaw(matrix: Matrix): List[String] =
     (("Method" :: Impl.all.map(_.toString)) :: Method.all.map{ method =>
-      method.toString :: Impl.all.map(impl => matrix.get((method, impl)).fold("N/A")(_.score.toString))
+      method.toString :: Impl.all.map(impl => matrix.get((method, impl)).fold("N/A")(r => format(r.score)))
     }).map(_.mkString(","))
 
   def toCSVRelative(matrix: Matrix): List[String] =
@@ -38,9 +38,12 @@ object MatrixFormatter {
           implRes <- matrix.get((method, impl))
           stdRes  <- matrix.get((method, Impl.STD))
           ratio   <- Try(implRes.score / stdRes.score).toOption
-        } yield ratio).getOrElse("N/A")
+        } yield format(ratio)).getOrElse("N/A")
       )
     }).map(_.mkString(","))
+
+  private def format(d: Double): String =
+    "%1.2f".format(d)
 
   private def extractMethod(r: RunResult): Option[Method] =
     Method.all.find(m =>

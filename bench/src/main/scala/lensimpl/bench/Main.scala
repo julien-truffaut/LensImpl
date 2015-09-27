@@ -7,14 +7,21 @@ import org.openjdk.jmh.runner.options.OptionsBuilder
 
 object Main {
 
-  def main(args: Array[String]): Unit = {
-    val options = new OptionsBuilder()
-      .warmupIterations(3)
-      .measurementIterations(3)
-      .forks(1)
-      .build()
+  val short = new OptionsBuilder()
+    .warmupIterations(3)
+    .measurementIterations(3)
+    .forks(1)
+    .build()
 
-    val runner = new Runner(options)
+  val long = new OptionsBuilder()
+    .warmupIterations(10)
+    .measurementIterations(20)
+    .forks(3)
+    .build()
+
+  def main(args: Array[String]): Unit = {
+
+    val runner = new Runner(short)
 
     val matrix = MatrixFormatter.parse(runner.run())
 
