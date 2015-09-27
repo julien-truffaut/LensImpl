@@ -1,6 +1,7 @@
 package lensimpl.bench
 
-import lensimpl.bench.output.MatrixResultFormat
+import java.io.{File, FileOutputStream}
+
 import org.openjdk.jmh.runner.Runner
 import org.openjdk.jmh.runner.options.OptionsBuilder
 
@@ -15,9 +16,14 @@ object Main {
 
     val runner = new Runner(options)
 
-    val matrixFormat = new MatrixResultFormat(System.out)
+    val matrix = MatrixFormatter.parse(runner.run())
 
-    matrixFormat.writeOut(runner.run())
+    val f = new FileOutputStream(new File("lens.csv"))
+
+    (MatrixFormatter.toCSVRaw(matrix) ++ MatrixFormatter.toCSVRelative(matrix))
+      .foreach(l => f.write((l + "\n").getBytes("UTF-8")))
+
+    f.close()
   }
 
 }

@@ -1,21 +1,19 @@
-package lensimpl.bench.output
-
-import java.io.{PrintStream, PrintWriter, StringWriter}
+package lensimpl.bench
 
 import org.openjdk.jmh.results.RunResult
-import org.openjdk.jmh.results.format.ResultFormat
 
 import scala.collection.JavaConversions._
 import scala.language.existentials
+import scala.util.Try
 
-class MatrixResultFormat(out: PrintStream) extends ResultFormat {
+object MatrixFormatter {
 
   type Matrix = Map[(Method, Impl), Result]
 
-  override def writeOut(collection: java.util.Collection[RunResult]): Unit = {
+  def parse(collection: java.util.Collection[RunResult]): Matrix = {
     val results = collection.toList
 
-    val matrix = results.foldLeft(Map.empty[(Method, Impl), Result])( (acc, r) =>
+    results.foldLeft(Map.empty[(Method, Impl), Result])( (acc, r) =>
       (for {
         method <- extractMethod(r)
         impl   <- extractImpl(r)
@@ -25,22 +23,24 @@ class MatrixResultFormat(out: PrintStream) extends ResultFormat {
         acc
       }
     )
-
-    print(matrix)
   }
 
-  private def print(matrix: Matrix): Unit = {
-    val sw = new StringWriter()
-    val pw = new PrintWriter(sw)
 
-    toCSV(matrix).foreach(pw.println)
-  }
+  def toCSVRaw(matrix: Matrix): List[String] =
+    (("Method" :: Impl.all.map(_.toString)) :: Method.all.map{ method =>
+      method.toString :: Impl.all.map(impl => matrix.get((method, impl)).fold("N/A")(_.score.toString))
+    }).map(_.mkString(","))
 
-  private def toCSV(matrix: Matrix): List[String] =
-    Method.all.map{ method =>
-      val line = method.toString :: Impl.all.map(impl => matrix.get((method, impl)).fold("N/A")(_.score.toString))
-      line.mkString(",")
-    }
+  def toCSVRelative(matrix: Matrix): List[String] =
+    (("Method" :: Impl.all.map(_.toString)) :: Method.all.map{ method =>
+      method.toString :: Impl.all.map(impl =>
+        (for {
+          implRes <- matrix.get((method, impl))
+          stdRes  <- matrix.get((method, Impl.STD))
+          ratio   <- Try(implRes.score / stdRes.score).toOption
+        } yield ratio).getOrElse("N/A")
+      )
+    }).map(_.mkString(","))
 
   private def extractMethod(r: RunResult): Option[Method] =
     Method.all.find(m =>
