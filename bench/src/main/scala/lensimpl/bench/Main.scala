@@ -8,9 +8,9 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     val options = new OptionsBuilder()
-      .include(".*" + LensBench.getClass.getSimpleName + ".*")
       .warmupIterations(3)
-      .measurementIterations(5)
+      .measurementIterations(3)
+      .forks(1)
       .build()
 
     val runner = new Runner(options)
