@@ -35,6 +35,8 @@ lazy val core = project
 lazy val bench = project.dependsOn(core)
   .settings(moduleName := "lens-impl-bench")
   .settings(lensSettings)
+  .settings(libraryDependencies ++= Seq(jmhAnnProcess))
   .enablePlugins(JmhPlugin)
 
-lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+lazy val scalacheck    = "org.scalacheck"   %% "scalacheck"                % "1.12.5" % "test"
+lazy val jmhAnnProcess = "org.openjdk.jmh"   %  "jmh-generator-annprocess" % "1.10.3"
