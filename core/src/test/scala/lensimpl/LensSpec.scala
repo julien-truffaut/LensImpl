@@ -31,4 +31,12 @@ class LensSpec extends Properties("LensCC") {
     agePF.set(agePF.get(p), p) == p
   }
 
+  property("set - get (LensMO)") = forAll { (a: Int, p: Person) =>
+    ageMO.get(ageMO.set(a, p)) == a
+  }
+
+  property("get - set (LensMO)") = forAll { (p: Person) =>
+    ageMO.set(ageMO.get(p), p) == p
+  }
+
 }

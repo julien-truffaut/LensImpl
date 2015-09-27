@@ -2,7 +2,7 @@ package lensimpl.bench
 
 import java.util.concurrent.TimeUnit
 
-import lensimpl.{LensPF, LensVL, LensCC}
+import lensimpl.{LensMO, LensPF, LensVL, LensCC}
 import org.openjdk.jmh.annotations._
 
 @BenchmarkMode(Array(Mode.AverageTime))
@@ -65,6 +65,23 @@ class LensBench {
   @Benchmark def lensPFModifyF0(in: Nested0Input) = PF._n0_i.modifyF(safeDivide)(in.n0)
   @Benchmark def lensPFModifyF3(in: Nested0Input) = PF._n0Ton3I.modifyF(safeDivide)(in.n0)
   @Benchmark def lensPFModifyF6(in: Nested0Input) = PF._n0Ton6I.modifyF(safeDivide)(in.n0)
+
+  // MO
+  @Benchmark def lensMOGet0(in: Nested0Input) = MO._n0_i.get(in.n0)
+  @Benchmark def lensMOGet3(in: Nested0Input) = MO._n0Ton3I.get(in.n0)
+  @Benchmark def lensMOGet6(in: Nested0Input) = MO._n0Ton6I.get(in.n0)
+
+  @Benchmark def lensMOSet0(in: Nested0Input) = MO._n0_i.set(43, in.n0)
+  @Benchmark def lensMOSet3(in: Nested0Input) = MO._n0Ton3I.set(43, in.n0)
+  @Benchmark def lensMOSet6(in: Nested0Input) = MO._n0Ton6I.set(43, in.n0)
+
+  @Benchmark def lensMOModify0(in: Nested0Input) = MO._n0_i.modify(_ + 1)(in.n0)
+  @Benchmark def lensMOModify3(in: Nested0Input) = MO._n0Ton3I.modify(_ + 1)(in.n0)
+  @Benchmark def lensMOModify6(in: Nested0Input) = MO._n0Ton6I.modify(_ + 1)(in.n0)
+
+  @Benchmark def lensMOModifyF0(in: Nested0Input) = MO._n0_i.modifyF(safeDivide)(in.n0)
+  @Benchmark def lensMOModifyF3(in: Nested0Input) = MO._n0Ton3I.modifyF(safeDivide)(in.n0)
+  @Benchmark def lensMOModifyF6(in: Nested0Input) = MO._n0Ton6I.modifyF(safeDivide)(in.n0)
 
   // Vanilla scala (std)
   @Benchmark def lensSTDGet0(in: Nested0Input) = in.n0.i
@@ -157,6 +174,22 @@ object LensBench {
     val _n0_i = LensPF[Nested0, Int](_.i, (i, n) => n.copy(i = i))
     val _n3_i = LensPF[Nested3, Int](_.i, (i, n) => n.copy(i = i))
     val _n6_i = LensPF[Nested6, Int](_.i, (i, n) => n.copy(i = i))
+
+    val _n0Ton3I = _n1 compose _n2 compose _n3 compose _n3_i
+    val _n0Ton6I = _n1 compose _n2 compose _n3 compose _n4 compose _n5 compose _n6 compose _n6_i
+  }
+
+  object MO {
+    val _n1 = LensMO[Nested0, Nested1](_.n, (n2, n1) => n1.copy(n = n2))
+    val _n2 = LensMO[Nested1, Nested2](_.n, (n3, n2) => n2.copy(n = n3))
+    val _n3 = LensMO[Nested2, Nested3](_.n, (n4, n3) => n3.copy(n = n4))
+    val _n4 = LensMO[Nested3, Nested4](_.n, (n5, n4) => n4.copy(n = n5))
+    val _n5 = LensMO[Nested4, Nested5](_.n, (n6, n5) => n5.copy(n = n6))
+    val _n6 = LensMO[Nested5, Nested6](_.n, (n7, n6) => n6.copy(n = n7))
+
+    val _n0_i = LensMO[Nested0, Int](_.i, (i, n) => n.copy(i = i))
+    val _n3_i = LensMO[Nested3, Int](_.i, (i, n) => n.copy(i = i))
+    val _n6_i = LensMO[Nested6, Int](_.i, (i, n) => n.copy(i = i))
 
     val _n0Ton3I = _n1 compose _n2 compose _n3 compose _n3_i
     val _n0Ton6I = _n1 compose _n2 compose _n3 compose _n4 compose _n5 compose _n6 compose _n6_i
