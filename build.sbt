@@ -4,7 +4,7 @@ import sbt.Keys._
 val lensSettings: Seq[Setting[_]] = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.11.7",
-  crossScalaVersions := Seq("2.11.7"),
+  crossScalaVersions := Seq("2.11.7", "2.12.0-M2"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
