@@ -8,6 +8,9 @@
 ## NetBeans files to ignore
 .*_nb
 
+# bench output
+*.csv
+
 ## scala specific files to ignore
 *.class
 target/
