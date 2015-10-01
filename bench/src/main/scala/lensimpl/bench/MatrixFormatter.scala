@@ -37,7 +37,7 @@ object MatrixFormatter {
         (for {
           implRes <- matrix.get((method, impl))
           stdRes  <- matrix.get((method, Impl.STD))
-          ratio   <- Try(implRes.score / stdRes.score).toOption
+          ratio   <- Try(stdRes.score / implRes.score).toOption
         } yield format(ratio)).getOrElse("N/A")
       )
     }).map(_.mkString(","))

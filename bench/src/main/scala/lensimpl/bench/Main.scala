@@ -18,6 +18,7 @@ object Main {
     .warmupIterations(10)
     .measurementIterations(20)
     .forks(3)
+    .threads(Runtime.getRuntime.availableProcessors)
     .build()
 
   def main(args: Array[String]): Unit = {

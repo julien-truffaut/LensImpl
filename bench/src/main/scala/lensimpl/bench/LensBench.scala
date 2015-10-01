@@ -1,12 +1,8 @@
 package lensimpl.bench
 
-import java.util.concurrent.TimeUnit
-
-import lensimpl.{LensMO, LensPF, LensVL, LensCC}
+import lensimpl.{LensCC, LensMO, LensPF, LensVL}
 import org.openjdk.jmh.annotations._
 
-@BenchmarkMode(Array(Mode.AverageTime))
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
 class LensBench {
   import LensBench._
