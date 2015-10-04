@@ -23,7 +23,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val runner = new Runner(long)
+    val runner = new Runner(short)
     val matrix = MatrixFormatter.parse(runner.run())
     val f = new FileOutputStream(new File(s"lens-${LocalDateTime.now()}.csv"))
 

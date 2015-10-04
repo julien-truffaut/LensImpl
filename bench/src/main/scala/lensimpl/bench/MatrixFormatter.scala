@@ -78,11 +78,12 @@ object Method {
 
 sealed trait Impl extends Product with Serializable
 object Impl {
-  val all = List(STD, MO, CC, VL, PF)
-  case object STD extends Impl
-  case object MO  extends Impl
-  case object CC  extends Impl
-  case object VL  extends Impl
-  case object PF  extends Impl
+  val all = List(STD, MACRO, MO, CC, VL, PF)
+  case object STD   extends Impl
+  case object MACRO extends Impl
+  case object MO    extends Impl
+  case object CC    extends Impl
+  case object VL    extends Impl
+  case object PF    extends Impl
 }
 

@@ -1,5 +1,6 @@
 package lensimpl.bench
 
+import lensimpl.macros.GenLens
 import lensimpl.{LensCC, LensMO, LensPF, LensVL}
 import org.openjdk.jmh.annotations._
 
@@ -78,6 +79,23 @@ class LensBench {
   @Benchmark def lensMOModifyF0(in: Nested0Input) = MO._n0_i.modifyF(safeDivide)(in.n0)
   @Benchmark def lensMOModifyF3(in: Nested0Input) = MO._n0Ton3I.modifyF(safeDivide)(in.n0)
   @Benchmark def lensMOModifyF6(in: Nested0Input) = MO._n0Ton6I.modifyF(safeDivide)(in.n0)
+
+  // MO MACRO
+  @Benchmark def lensMACROGet0(in: Nested0Input) = MACRO._n0_i.get(in.n0)
+  @Benchmark def lensMACROGet3(in: Nested0Input) = MACRO._n0Ton3I.get(in.n0)
+  @Benchmark def lensMACROGet6(in: Nested0Input) = MACRO._n0Ton6I.get(in.n0)
+
+  @Benchmark def lensMACROSet0(in: Nested0Input) = MACRO._n0_i.set(43, in.n0)
+  @Benchmark def lensMACROSet3(in: Nested0Input) = MACRO._n0Ton3I.set(43, in.n0)
+  @Benchmark def lensMACROSet6(in: Nested0Input) = MACRO._n0Ton6I.set(43, in.n0)
+
+  @Benchmark def lensMACROModify0(in: Nested0Input) = MACRO._n0_i.modify(_ + 1)(in.n0)
+  @Benchmark def lensMACROModify3(in: Nested0Input) = MACRO._n0Ton3I.modify(_ + 1)(in.n0)
+  @Benchmark def lensMACROModify6(in: Nested0Input) = MACRO._n0Ton6I.modify(_ + 1)(in.n0)
+
+  @Benchmark def lensMACROModifyF0(in: Nested0Input) = MACRO._n0_i.modifyF(safeDivide)(in.n0)
+  @Benchmark def lensMACROModifyF3(in: Nested0Input) = MACRO._n0Ton3I.modifyF(safeDivide)(in.n0)
+  @Benchmark def lensMACROModifyF6(in: Nested0Input) = MACRO._n0Ton6I.modifyF(safeDivide)(in.n0)
 
   // Vanilla scala (std)
   @Benchmark def lensSTDGet0(in: Nested0Input) = in.n0.i
@@ -186,6 +204,22 @@ object LensBench {
     val _n0_i = LensMO[Nested0, Int](_.i, (i, n) => n.copy(i = i))
     val _n3_i = LensMO[Nested3, Int](_.i, (i, n) => n.copy(i = i))
     val _n6_i = LensMO[Nested6, Int](_.i, (i, n) => n.copy(i = i))
+
+    val _n0Ton3I = _n1 compose _n2 compose _n3 compose _n3_i
+    val _n0Ton6I = _n1 compose _n2 compose _n3 compose _n4 compose _n5 compose _n6 compose _n6_i
+  }
+
+  object MACRO {
+    val _n1 = GenLens[Nested0, Nested1]("n")
+    val _n2 = GenLens[Nested1, Nested2]("n")
+    val _n3 = GenLens[Nested2, Nested3]("n")
+    val _n4 = GenLens[Nested3, Nested4]("n")
+    val _n5 = GenLens[Nested4, Nested5]("n")
+    val _n6 = GenLens[Nested5, Nested6]("n")
+
+    val _n0_i = GenLens[Nested0, Int]("i")
+    val _n3_i = GenLens[Nested3, Int]("i")
+    val _n6_i = GenLens[Nested6, Int]("i")
 
     val _n0Ton3I = _n1 compose _n2 compose _n3 compose _n3_i
     val _n0Ton6I = _n1 compose _n2 compose _n3 compose _n4 compose _n5 compose _n6 compose _n6_i

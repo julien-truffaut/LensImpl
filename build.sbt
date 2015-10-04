@@ -24,15 +24,28 @@ val lensSettings: Seq[Setting[_]] = Seq(
 lazy val lensImpl = project.in(file("."))
   .settings(moduleName := "lens-impl")
   .settings(lensSettings)
-  .aggregate(core, bench)
-  .dependsOn(core, bench % "compile-internal;test-internal -> test")
+  .aggregate(core, macros, bench)
+  .dependsOn(core, macros, bench % "compile-internal;test-internal -> test")
 
 lazy val core = project
   .settings(moduleName := "lens-impl-core")
   .settings(lensSettings)
   .settings(libraryDependencies ++= Seq(scalacheck))
 
-lazy val bench = project.dependsOn(core)
+lazy val macros = project.dependsOn(core)
+  .in(file("macro"))
+  .settings(moduleName := "lens-impl-macro")
+  .settings(lensSettings)
+  .settings(Seq(
+    scalacOptions  += "-language:experimental.macros",
+    libraryDependencies ++= Seq(
+      "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
+      "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided"
+    ),
+    addCompilerPlugin(paradisePlugin)
+  ))
+
+lazy val bench = project.dependsOn(core, macros)
   .settings(moduleName := "lens-impl-bench")
   .settings(lensSettings)
   .settings(
@@ -41,3 +54,5 @@ lazy val bench = project.dependsOn(core)
 
 lazy val scalacheck    = "org.scalacheck"   %% "scalacheck"                % "1.12.5" % "test"
 lazy val jmhAnnProcess = "org.openjdk.jmh"   %  "jmh-generator-annprocess" % "1.10.3"
+
+lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise" % "2.0.1" cross CrossVersion.full)
