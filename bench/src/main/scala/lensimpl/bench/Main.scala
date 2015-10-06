@@ -15,9 +15,9 @@ object Main {
     .build()
 
   val long = new OptionsBuilder()
-    .warmupIterations(10)
+    .warmupIterations(20)
     .measurementIterations(20)
-    .forks(3)
+    .forks(10)
     .threads(Runtime.getRuntime.availableProcessors)
     .build()
 
