@@ -48,11 +48,14 @@ lazy val macros = project.dependsOn(core)
 lazy val bench = project.dependsOn(core, macros)
   .settings(moduleName := "lens-impl-bench")
   .settings(lensSettings)
+  .settings(mainClass in (Jmh, run) := Some("lensimpl.bench.Main"))
   .settings(
-    mainClass in (Jmh, run) := Some("lensimpl.bench.Main")
-  ) .enablePlugins(JmhPlugin)
+    javaOptions in Jmh ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC"),
+    javaOptions in (Test, run) ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC")
+  )
+  .settings(libraryDependencies += "org.openjdk.jmh" % "jmh-generator-annprocess" % "1.12")
+  .enablePlugins(JmhPlugin)
 
 lazy val scalacheck    = "org.scalacheck"   %% "scalacheck"                % "1.12.5" % "test"
-lazy val jmhAnnProcess = "org.openjdk.jmh"   %  "jmh-generator-annprocess" % "1.10.3"
 
 lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise" % "2.0.1" cross CrossVersion.full)
