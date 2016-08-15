@@ -29,8 +29,13 @@ object Main {
     .build()
 
   def main(args: Array[String]): Unit = {
+    val config = args.headOption.map{
+      case "s" => short
+      case "m" => medium
+      case "l" => long
+    }.getOrElse(sys.error("requires config option s, m or l for small, medium or long"))
 
-    val runner = new Runner(medium)
+    val runner = new Runner(config)
     val matrix = MatrixFormatter.parse(runner.run())
     val f = new FileOutputStream(new File(s"lens-${LocalDateTime.now()}.csv"))
 
