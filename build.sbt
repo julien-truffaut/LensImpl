@@ -1,10 +1,7 @@
-import sbt._
-import sbt.Keys._
-
 val lensSettings: Seq[Setting[_]] = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.11.7",
-  crossScalaVersions := Seq("2.11.7", "2.12.0-M2"),
+  scalaVersion       := "2.11.8",
+  crossScalaVersions := Seq("2.11.8", "2.12.0-M5"),
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -50,12 +47,12 @@ lazy val bench = project.dependsOn(core, macros)
   .settings(lensSettings)
   .settings(mainClass in (Jmh, run) := Some("lensimpl.bench.Main"))
   .settings(
-    javaOptions in Jmh ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC"),
+    javaOptions in Jmh         ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC"),
     javaOptions in (Test, run) ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC")
   )
-  .settings(libraryDependencies += "org.openjdk.jmh" % "jmh-generator-annprocess" % "1.12")
+  .settings(libraryDependencies += "org.openjdk.jmh" % "jmh-generator-annprocess" % "1.13")
   .enablePlugins(JmhPlugin)
 
-lazy val scalacheck    = "org.scalacheck"   %% "scalacheck"                % "1.12.5" % "test"
+lazy val scalacheck    = "org.scalacheck"   %% "scalacheck" % "1.13.2" % "test"
 
-lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise" % "2.0.1" cross CrossVersion.full)
+lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise" % "2.1.0" cross CrossVersion.full)

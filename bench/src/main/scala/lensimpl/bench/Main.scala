@@ -14,6 +14,13 @@ object Main {
     .forks(1)
     .build()
 
+  val medium = new OptionsBuilder()
+    .warmupIterations(10)
+    .measurementIterations(10)
+    .forks(5)
+    .threads(Runtime.getRuntime.availableProcessors)
+    .build()
+
   val long = new OptionsBuilder()
     .warmupIterations(20)
     .measurementIterations(20)
@@ -23,7 +30,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val runner = new Runner(short)
+    val runner = new Runner(medium)
     val matrix = MatrixFormatter.parse(runner.run())
     val f = new FileOutputStream(new File(s"lens-${LocalDateTime.now()}.csv"))
 

@@ -30,38 +30,38 @@ class LensBench {
   @Benchmark def lensCCModifyF6(in: Nested0Input) = CC._n0Ton6I.modifyF(safeDivide)(in.n0)
 
   // VL
-  @Benchmark def lensVLGet0(in: Nested0Input) = VL._n0_i.get(in.n0)
-  @Benchmark def lensVLGet3(in: Nested0Input) = VL._n0Ton3I.get(in.n0)
-  @Benchmark def lensVLGet6(in: Nested0Input) = VL._n0Ton6I.get(in.n0)
-
-  @Benchmark def lensVLSet0(in: Nested0Input) = VL._n0_i.set(43, in.n0)
-  @Benchmark def lensVLSet3(in: Nested0Input) = VL._n0Ton3I.set(43, in.n0)
-  @Benchmark def lensVLSet6(in: Nested0Input) = VL._n0Ton6I.set(43, in.n0)
-
-  @Benchmark def lensVLModify0(in: Nested0Input) = VL._n0_i.modify(_ + 1)(in.n0)
-  @Benchmark def lensVLModify3(in: Nested0Input) = VL._n0Ton3I.modify(_ + 1)(in.n0)
-  @Benchmark def lensVLModify6(in: Nested0Input) = VL._n0Ton6I.modify(_ + 1)(in.n0)
-
-  @Benchmark def lensVLModifyF0(in: Nested0Input) = VL._n0_i.modifyF(safeDivide)(in.n0)
-  @Benchmark def lensVLModifyF3(in: Nested0Input) = VL._n0Ton3I.modifyF(safeDivide)(in.n0)
-  @Benchmark def lensVLModifyF6(in: Nested0Input) = VL._n0Ton6I.modifyF(safeDivide)(in.n0)
-
-  // PF
-  @Benchmark def lensPFGet0(in: Nested0Input) = PF._n0_i.get(in.n0)
-  @Benchmark def lensPFGet3(in: Nested0Input) = PF._n0Ton3I.get(in.n0)
-  @Benchmark def lensPFGet6(in: Nested0Input) = PF._n0Ton6I.get(in.n0)
-
-  @Benchmark def lensPFSet0(in: Nested0Input) = PF._n0_i.set(43, in.n0)
-  @Benchmark def lensPFSet3(in: Nested0Input) = PF._n0Ton3I.set(43, in.n0)
-  @Benchmark def lensPFSet6(in: Nested0Input) = PF._n0Ton6I.set(43, in.n0)
-
-  @Benchmark def lensPFModify0(in: Nested0Input) = PF._n0_i.modify(_ + 1)(in.n0)
-  @Benchmark def lensPFModify3(in: Nested0Input) = PF._n0Ton3I.modify(_ + 1)(in.n0)
-  @Benchmark def lensPFModify6(in: Nested0Input) = PF._n0Ton6I.modify(_ + 1)(in.n0)
-
-  @Benchmark def lensPFModifyF0(in: Nested0Input) = PF._n0_i.modifyF(safeDivide)(in.n0)
-  @Benchmark def lensPFModifyF3(in: Nested0Input) = PF._n0Ton3I.modifyF(safeDivide)(in.n0)
-  @Benchmark def lensPFModifyF6(in: Nested0Input) = PF._n0Ton6I.modifyF(safeDivide)(in.n0)
+//  @Benchmark def lensVLGet0(in: Nested0Input) = VL._n0_i.get(in.n0)
+//  @Benchmark def lensVLGet3(in: Nested0Input) = VL._n0Ton3I.get(in.n0)
+//  @Benchmark def lensVLGet6(in: Nested0Input) = VL._n0Ton6I.get(in.n0)
+//
+//  @Benchmark def lensVLSet0(in: Nested0Input) = VL._n0_i.set(43, in.n0)
+//  @Benchmark def lensVLSet3(in: Nested0Input) = VL._n0Ton3I.set(43, in.n0)
+//  @Benchmark def lensVLSet6(in: Nested0Input) = VL._n0Ton6I.set(43, in.n0)
+//
+//  @Benchmark def lensVLModify0(in: Nested0Input) = VL._n0_i.modify(_ + 1)(in.n0)
+//  @Benchmark def lensVLModify3(in: Nested0Input) = VL._n0Ton3I.modify(_ + 1)(in.n0)
+//  @Benchmark def lensVLModify6(in: Nested0Input) = VL._n0Ton6I.modify(_ + 1)(in.n0)
+//
+//  @Benchmark def lensVLModifyF0(in: Nested0Input) = VL._n0_i.modifyF(safeDivide)(in.n0)
+//  @Benchmark def lensVLModifyF3(in: Nested0Input) = VL._n0Ton3I.modifyF(safeDivide)(in.n0)
+//  @Benchmark def lensVLModifyF6(in: Nested0Input) = VL._n0Ton6I.modifyF(safeDivide)(in.n0)
+//
+//  // PF
+//  @Benchmark def lensPFGet0(in: Nested0Input) = PF._n0_i.get(in.n0)
+//  @Benchmark def lensPFGet3(in: Nested0Input) = PF._n0Ton3I.get(in.n0)
+//  @Benchmark def lensPFGet6(in: Nested0Input) = PF._n0Ton6I.get(in.n0)
+//
+//  @Benchmark def lensPFSet0(in: Nested0Input) = PF._n0_i.set(43, in.n0)
+//  @Benchmark def lensPFSet3(in: Nested0Input) = PF._n0Ton3I.set(43, in.n0)
+//  @Benchmark def lensPFSet6(in: Nested0Input) = PF._n0Ton6I.set(43, in.n0)
+//
+//  @Benchmark def lensPFModify0(in: Nested0Input) = PF._n0_i.modify(_ + 1)(in.n0)
+//  @Benchmark def lensPFModify3(in: Nested0Input) = PF._n0Ton3I.modify(_ + 1)(in.n0)
+//  @Benchmark def lensPFModify6(in: Nested0Input) = PF._n0Ton6I.modify(_ + 1)(in.n0)
+//
+//  @Benchmark def lensPFModifyF0(in: Nested0Input) = PF._n0_i.modifyF(safeDivide)(in.n0)
+//  @Benchmark def lensPFModifyF3(in: Nested0Input) = PF._n0Ton3I.modifyF(safeDivide)(in.n0)
+//  @Benchmark def lensPFModifyF6(in: Nested0Input) = PF._n0Ton6I.modifyF(safeDivide)(in.n0)
 
   // MO
   @Benchmark def lensMOGet0(in: Nested0Input) = MO._n0_i.get(in.n0)
