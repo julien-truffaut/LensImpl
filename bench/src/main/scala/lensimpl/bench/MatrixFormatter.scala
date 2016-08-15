@@ -2,7 +2,7 @@ package lensimpl.bench
 
 import org.openjdk.jmh.results.RunResult
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.language.existentials
 import scala.util.Try
 
@@ -11,7 +11,7 @@ object MatrixFormatter {
   type Matrix = Map[(Method, Impl), Result]
 
   def parse(collection: java.util.Collection[RunResult]): Matrix = {
-    val results = collection.toList
+    val results = collection.asScala.toList
 
     results.foldLeft(Map.empty[(Method, Impl), Result])( (acc, r) =>
       (for {

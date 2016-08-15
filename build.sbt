@@ -9,7 +9,6 @@ val lensSettings: Seq[Setting[_]] = Seq(
     "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Yinline-warnings",
     "-Yno-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
