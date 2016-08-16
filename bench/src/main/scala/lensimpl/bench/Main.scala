@@ -1,48 +1,58 @@
 package lensimpl.bench
 
-import java.io.{File, FileOutputStream}
+import java.io.FileWriter
 import java.time.LocalDateTime
 
 import org.openjdk.jmh.runner.Runner
-import org.openjdk.jmh.runner.options.OptionsBuilder
+import org.openjdk.jmh.runner.options.{Options, OptionsBuilder}
+
+import scala.util.Properties.versionString
 
 object Main {
 
-  val short = new OptionsBuilder()
-    .warmupIterations(3)
-    .measurementIterations(3)
-    .forks(1)
-    .build()
-
-  val medium = new OptionsBuilder()
-    .warmupIterations(10)
-    .measurementIterations(10)
-    .forks(5)
-    .threads(Runtime.getRuntime.availableProcessors)
-    .build()
-
-  val long = new OptionsBuilder()
-    .warmupIterations(20)
-    .measurementIterations(20)
-    .forks(10)
-    .threads(Runtime.getRuntime.availableProcessors)
-    .build()
-
   def main(args: Array[String]): Unit = {
     val config = args.headOption.map{
-      case "s" => short
-      case "m" => medium
-      case "l" => long
+      case "s" => Config.short
+      case "m" => Config.medium
+      case "l" => Config.long
     }.getOrElse(sys.error("requires config option s, m or l for small, medium or long"))
 
-    val runner = new Runner(config)
+    val runner = new Runner(config.jmhOptions)
     val matrix = MatrixFormatter.parse(runner.run())
-    val f = new FileOutputStream(new File(s"lens-${LocalDateTime.now()}.csv"))
 
-    (MatrixFormatter.toCSVRaw(matrix) ++ MatrixFormatter.toCSVRelative(matrix))
-      .foreach(l => f.write((l + "\n").getBytes("UTF-8")))
+    val f = new FileWriter("lens.csv", true)
+
+    (List(s"date,${LocalDateTime.now()}", s"config,${config.name}", s"scala,$versionString") ++
+      MatrixFormatter.toCSVRaw(matrix) ++
+      MatrixFormatter.toCSVRelative(matrix) ++
+      List(""))
+      .foreach(l => f.write(l + "\n"))
 
     f.close()
   }
 
+}
+
+case class Config(name: String, jmhOptions: Options)
+
+object Config {
+  val short = Config("short", new OptionsBuilder()
+    .warmupIterations(3)
+    .measurementIterations(3)
+    .forks(1)
+    .build())
+
+  val medium = Config("medium", new OptionsBuilder()
+    .warmupIterations(10)
+    .measurementIterations(10)
+    .forks(5)
+    .threads(Runtime.getRuntime.availableProcessors)
+    .build())
+
+  val long = Config("long", new OptionsBuilder()
+    .warmupIterations(20)
+    .measurementIterations(20)
+    .forks(10)
+    .threads(Runtime.getRuntime.availableProcessors)
+    .build())
 }
