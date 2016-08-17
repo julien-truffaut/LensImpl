@@ -4,7 +4,7 @@ import java.io.FileWriter
 import java.time.LocalDateTime
 
 import org.openjdk.jmh.runner.Runner
-import org.openjdk.jmh.runner.options.{Options, OptionsBuilder}
+import org.openjdk.jmh.runner.options.{ChainedOptionsBuilder, Options, OptionsBuilder}
 
 import scala.util.Properties.versionString
 
@@ -33,26 +33,29 @@ object Main {
 
 }
 
-case class Config(name: String, jmhOptions: Options)
+case class Config(name: String, builder: ChainedOptionsBuilder) {
+  def jmhOptions: Options =
+    builder
+      .exclude(".*LensVLBench.*")
+      .exclude(".*LensPFBench.*")
+      .build
+}
 
 object Config {
   val short = Config("short", new OptionsBuilder()
-    .warmupIterations(3)
-    .measurementIterations(3)
-    .forks(1)
-    .build())
+    .warmupIterations(1)
+    .measurementIterations(1)
+    .forks(1))
 
   val medium = Config("medium", new OptionsBuilder()
     .warmupIterations(10)
     .measurementIterations(10)
     .forks(5)
-    .threads(Runtime.getRuntime.availableProcessors)
-    .build())
+    .threads(Runtime.getRuntime.availableProcessors))
 
   val long = Config("long", new OptionsBuilder()
     .warmupIterations(20)
     .measurementIterations(20)
     .forks(10)
-    .threads(Runtime.getRuntime.availableProcessors)
-    .build())
+    .threads(Runtime.getRuntime.availableProcessors))
 }
