@@ -49,7 +49,10 @@ lazy val bench = project.dependsOn(core, macros)
     javaOptions in Jmh         ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC"),
     javaOptions in (Test, run) ++= Seq("-server", "-Xms2G", "-Xmx2G", "-XX:+UseG1GC")
   )
-  .settings(libraryDependencies += "org.openjdk.jmh" % "jmh-generator-annprocess" % "1.13")
+  .settings(libraryDependencies ++= Seq(
+    "org.openjdk.jmh" % "jmh-generator-annprocess" % "1.13",
+    "org.jfree"       % "jfreechart"               % "1.0.19"
+  ))
   .enablePlugins(JmhPlugin)
 
 lazy val scalacheck    = "org.scalacheck"   %% "scalacheck" % "1.13.2" % "test"

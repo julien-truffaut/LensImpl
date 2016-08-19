@@ -4,56 +4,43 @@ import org.openjdk.jmh.results.RunResult
 
 import scala.collection.JavaConverters._
 import scala.language.existentials
-import scala.util.Try
 
 object MatrixFormatter {
-
-  type Matrix = Map[(Method, Impl), Result]
 
   def parse(collection: java.util.Collection[RunResult]): Matrix = {
     val results = collection.asScala.toList
 
-    results.foldLeft(Map.empty[(Method, Impl), Result])( (acc, r) =>
+    results.foldLeft(Matrix.empty)( (acc, r) =>
       (for {
         method <- extractMethod(r)
         impl   <- extractImpl(r)
         res     = r.getPrimaryResult
-      } yield acc + ((method, impl) -> Result(res.getScore, res.getScoreUnit, res.getScoreError))).getOrElse{
-        println(s"Could not extract method and impl from ${r.getParams.getBenchmark}")
-        acc
+      } yield acc.addResult(method, impl, Result(res.getScore, res.getScoreUnit, res.getScoreError))
+      ).getOrElse{
+         println(s"Could not extract method and impl from ${r.getParams.getBenchmark}")
+         acc
       }
     )
   }
 
-
   def toCSVRaw(matrix: Matrix): List[String] =
     (("Method" :: Impl.all.map(_.toString)) :: Method.all.map{ method =>
-      method.toString :: Impl.all.map(impl => matrix.get((method, impl)).fold("N/A")(r => format(r.score)))
+      method.toString :: Impl.all.map(impl => matrix.get(method, impl).fold("N/A")(r => format(r.score)))
     }).map(_.mkString(","))
 
-  def toCSVRelative(matrix: Matrix): List[String] =
-    (("Method" :: Impl.all.map(_.toString)) :: Method.all.map{ method =>
-      method.toString :: Impl.all.map(impl =>
-        (for {
-          implRes <- matrix.get((method, impl))
-          stdRes  <- matrix.get((method, Impl.STD))
-          ratio   <- Try(stdRes.score / implRes.score).toOption
-        } yield format(ratio)).getOrElse("N/A")
-      )
-    }).map(_.mkString(","))
+  def toCSVRelative(matrix: NormalisedMatrix): List[String] =
+    (("Method" :: Impl.all.map(_.toString)) :: Method.all.map(method =>
+      method.toString :: Impl.all.map(impl => matrix.get(method, impl).fold("N/A")(format))
+    )).map(_.mkString(","))
 
   private def format(d: Double): String =
     "%1.2f".format(d)
 
   private def extractMethod(r: RunResult): Option[Method] =
-    Method.all.find(m =>
-      r.getParams.getBenchmark.contains(m.toString)
-    )
+    Method.all.find(m => r.getParams.getBenchmark.contains(m.toString))
 
   private def extractImpl(r: RunResult): Option[Impl] =
-    Impl.all.find(m =>
-      r.getParams.getBenchmark.contains(m.toString)
-    )
+    Impl.all.find(m => r.getParams.getBenchmark.contains(m.toString))
 
 }
 
@@ -74,6 +61,8 @@ object Method {
   case object ModifyF0 extends Method
   case object ModifyF3 extends Method
   case object ModifyF6 extends Method
+
+  implicit val ordering: Ordering[Method] = Ordering.by[Method, Int](all.indexOf)
 }
 
 sealed trait Impl extends Product with Serializable
@@ -85,5 +74,7 @@ object Impl {
   case object CC    extends Impl
   case object VL    extends Impl
   case object PF    extends Impl
+
+  implicit val ordering: Ordering[Impl] = Ordering.by[Impl, Int](all.indexOf)
 }
 
