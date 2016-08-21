@@ -22,10 +22,11 @@ object Main {
     val runner = new Runner(config.jmhOptions)
     val matrix = MatrixFormatter.parse(runner.run())
     val normalisedMatrix = matrix.normalised
+    val now = LocalDateTime.now()
 
     val f = new FileWriter("lens.csv", true)
 
-    (List(s"date,${LocalDateTime.now()}", s"config,${config.name}", s"scala,$versionNumberString") ++
+    (List(s"date,$now", s"config,${config.name}", s"scala,$versionNumberString") ++
       MatrixFormatter.toCSVRaw(matrix) ++
       MatrixFormatter.toCSVRelative(normalisedMatrix) ++
       List(""))
@@ -33,8 +34,8 @@ object Main {
 
     f.close()
 
-    ChartUtilities.saveChartAsJPEG(new File("lens.png"), Chart.save(matrix), 1200, 400)
-    ChartUtilities.saveChartAsJPEG(new File("lensNormalised.png"), Chart.save(normalisedMatrix), 1200, 400)
+    ChartUtilities.saveChartAsJPEG(new File(s"lens-$now.png"), Chart.save(matrix), 1200, 400)
+    ChartUtilities.saveChartAsJPEG(new File(s"lens-normalised-$now.png"), Chart.save(normalisedMatrix), 1200, 400)
   }
 
 }
