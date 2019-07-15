@@ -1,5 +1,6 @@
-package lensimpl.bench
+package lensimpl.bench.monocle1
 
+import lensimpl.bench._
 import lensimpl.macros.GenLens
 import org.openjdk.jmh.annotations._
 
@@ -19,7 +20,7 @@ class LensMacroBench {
 
   val n0Ton3I = n1 compose n2 compose n3 compose n3_i
   val n0Ton6I = n1 compose n2 compose n3 compose n4 compose n5 compose n6 compose n6_i
-  
+
   @Benchmark def lensMACROGet0(in: Nested0Input) = n0_i.get(in.n0)
   @Benchmark def lensMACROGet3(in: Nested0Input) = n0Ton3I.get(in.n0)
   @Benchmark def lensMACROGet6(in: Nested0Input) = n0Ton6I.get(in.n0)
