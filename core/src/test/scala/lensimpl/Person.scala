@@ -5,10 +5,10 @@ import org.scalacheck.Arbitrary
 case class Person(name: String, age: Int)
 
 object Person {
-  val ageCC: LensCC[Person, Int] = LensCC[Person, Int](_.age, (a, p) => p.copy(age = a))
-  val ageVL: LensVL[Person, Int] = LensVL[Person, Int](_.age, (a, p) => p.copy(age = a))
-  val agePF: LensPF[Person, Int] = LensPF[Person, Int](_.age, (a, p) => p.copy(age = a))
-  val ageMO: LensMO[Person, Int] = LensMO[Person, Int](_.age, (a, p) => p.copy(age = a))
+  val ageCC: adt.Lens[Person, Int] = adt.Lens[Person, Int](_.age, (a, p) => p.copy(age = a))
+  val ageVL: vanlaarhoven.Lens[Person, Int] = vanlaarhoven.Lens[Person, Int](_.age, (a, p) => p.copy(age = a))
+  val agePF: profunctor.Lens[Person, Int] = profunctor.Lens[Person, Int](_.age, (a, p) => p.copy(age = a))
+  val ageMO: monocle1.Lens[Person, Int] = monocle1.Lens[Person, Int](_.age, (a, p) => p.copy(age = a))
 
   implicit val arb: Arbitrary[Person] = Arbitrary(for {
     name <- Arbitrary.arbitrary[String]

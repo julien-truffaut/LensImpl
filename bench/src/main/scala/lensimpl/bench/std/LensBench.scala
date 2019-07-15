@@ -1,9 +1,10 @@
-package lensimpl.bench
+package lensimpl.bench.std
 
+import lensimpl.bench.{Nested0Input, Util}
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Benchmark)
-class LensSTDBench {
+class LensBench {
 
   @Benchmark def lensSTDGet0(in: Nested0Input) = in.n0.i
   @Benchmark def lensSTDGet3(in: Nested0Input) = in.n0.n.n.n.i

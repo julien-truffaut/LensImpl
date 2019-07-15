@@ -1,10 +1,10 @@
-package lensimpl
+package lensimpl.vanlaarhoven
 
-import typeclass.Functor
-import data._
+import lensimpl.data.{Const, Id}
+import lensimpl.typeclass.Functor
 
 // Van Laarhoven Lens
-abstract class LensVL[S, A] { self =>
+abstract class Lens[S, A] { self =>
   def modifyF[F[_]](f: A => F[A])(s: S)(implicit F: Functor[F]):  F[S]
 
   final def modify(f: A => A)(s: S): S =
@@ -16,16 +16,16 @@ abstract class LensVL[S, A] { self =>
   final def get(s: S): A =
     modifyF[({type λ[α] = Const[A, α]})#λ](a => Const(a))(s).getConst
 
-  final def compose[B](other: LensVL[A, B]): LensVL[S, B] = new LensVL[S, B] {
+  final def compose[B](other: Lens[A, B]): Lens[S, B] = new Lens[S, B] {
     override def modifyF[F[_]](f: (B) => F[B])(s: S)(implicit F: Functor[F]): F[S] =
       self.modifyF(other.modifyF(f))(s)
   }
 
 }
 
-object LensVL {
-  def apply[S, A](_get: S => A, _set: (A, S) => S): LensVL[S, A] =
-    new LensVL[S, A] {
+object Lens {
+  def apply[S, A](_get: S => A, _set: (A, S) => S): Lens[S, A] =
+    new Lens[S, A] {
       override def modifyF[F[_]](f: A => F[A])(s: S)(implicit F: Functor[F]): F[S] =
         F.map(f(_get(s)))(_set(_, s))
     }

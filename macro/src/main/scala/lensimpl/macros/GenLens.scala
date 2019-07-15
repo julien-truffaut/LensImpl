@@ -1,16 +1,17 @@
 package lensimpl.macros
 
-import lensimpl.LensMO
+import lensimpl.monocle1.Lens
+
 import scala.reflect.macros.blackbox.Context
 
-/** Generate efficient LensMO */
+/** Generate efficient Lens */
 object GenLens {
-  def apply[S, A](fieldName: String): LensMO[S, A] = macro GenLensImpl.mkLens_impl[S, A]
+  def apply[S, A](fieldName: String): Lens[S, A] = macro GenLensImpl.mkLens_impl[S, A]
 }
 
 object GenLensImpl {
 
-  def mkLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[LensMO[S, A]] = {
+  def mkLens_impl[S: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(fieldName: c.Expr[String]): c.Expr[Lens[S, A]] = {
     import c.universe._
 
     val (sTpe, aTpe) = (weakTypeOf[S], weakTypeOf[A])
@@ -29,11 +30,11 @@ object GenLensImpl {
       .find(_.name.decodedName.toString == strFieldName)
       .getOrElse(c.abort(c.enclosingPosition, s"Cannot find constructor field named $fieldName in $sTpe"))
 
-    c.Expr[LensMO[S, A]](q"""
-      import lensimpl.LensMO
+    c.Expr[Lens[S, A]](q"""
+      import lensimpl.monocle1.Lens
       import lensimpl.typeclass.Functor
 
-      new LensMO[$sTpe, $aTpe]{
+      new Lens[$sTpe, $aTpe]{
         def get(s: $sTpe): $aTpe =
           s.$fieldMethod
 

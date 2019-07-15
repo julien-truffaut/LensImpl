@@ -43,8 +43,8 @@ object Main {
 case class Config(name: String, builder: ChainedOptionsBuilder) {
   def jmhOptions: Options =
     builder
-      .exclude(".*LensVLBench.*")
-      .exclude(".*LensPFBench.*")
+      .exclude(".*vanlaarhoven.*")
+      .exclude(".*profunctor.*")
       .build
 }
 
