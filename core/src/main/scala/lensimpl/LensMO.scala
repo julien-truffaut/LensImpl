@@ -1,7 +1,6 @@
 package lensimpl
 
-import typeclass.Functor
-import data._
+import lensimpl.typeclass.Functor
 
 // Monocle 1.1 Lens
 abstract class LensMO[S, A] { self =>

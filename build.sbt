@@ -1,18 +1,17 @@
 val lensSettings: Seq[Setting[_]] = Seq(
   organization       := "com.github.julien-truffaut",
-  scalaVersion       := "2.11.8",
-  crossScalaVersions := Seq("2.11.8", "2.12.0-M5"),
+  scalaVersion       := "2.13.0",
+  crossScalaVersions := Seq("2.13.0"),
   scalacOptions     ++= Seq(
-    "-deprecation",
     "-encoding", "UTF-8",
     "-feature",
     "-language:implicitConversions", "-language:higherKinds", "-language:postfixOps",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Yno-adapted-args",
+    "-deprecation",
     "-Ywarn-dead-code",
     "-Ywarn-value-discard",
-    "-Xfuture"
+    "-Ywarn-unused:imports",
   ),
   resolvers += Resolver.sonatypeRepo("releases")
 )
@@ -35,10 +34,9 @@ lazy val macros = project.dependsOn(core)
   .settings(Seq(
     scalacOptions  += "-language:experimental.macros",
     libraryDependencies ++= Seq(
-      "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
-      "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided"
-    ),
-    addCompilerPlugin(paradisePlugin)
+      scalaOrganization.value % "scala-reflect"  % scalaVersion.value,
+      scalaOrganization.value % "scala-compiler" % scalaVersion.value % "provided"
+    )
   ))
 
 lazy val bench = project.dependsOn(core, macros)
@@ -55,6 +53,5 @@ lazy val bench = project.dependsOn(core, macros)
   ))
   .enablePlugins(JmhPlugin)
 
-lazy val scalacheck    = "org.scalacheck"   %% "scalacheck" % "1.13.2" % "test"
+lazy val scalacheck    = "org.scalacheck"   %% "scalacheck" % "1.14.0" % "test"
 
-lazy val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise" % "2.1.0" cross CrossVersion.full)
