@@ -18,4 +18,7 @@ object Prism {
     def reverseGet(to: B): A = _reverseGet(to)
     def getOption(from: A): Option[B] = _getOption(from)
   }
+
+  def partial[A, B](get: PartialFunction[A, B])(reverseGet: B => A): Prism[A, B] =
+    Prism(get.lift)(reverseGet)
 }

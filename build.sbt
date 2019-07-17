@@ -1,3 +1,5 @@
+import Dependencies._
+
 val lensSettings: Seq[Setting[_]] = Seq(
   organization       := "com.github.julien-truffaut",
   scalaVersion       := "2.13.0",
@@ -25,7 +27,7 @@ lazy val lensImpl = project.in(file("."))
 lazy val core = project
   .settings(moduleName := "lens-impl-core")
   .settings(lensSettings)
-  .settings(libraryDependencies ++= Seq(scalacheck))
+  .settings(libraryDependencies ++= Seq(scalatest, scalacheck))
 
 lazy val macros = project.dependsOn(core)
   .in(file("macro"))
@@ -52,6 +54,4 @@ lazy val bench = project.dependsOn(core, macros)
     "org.jfree"       % "jfreechart"               % "1.0.19"
   ))
   .enablePlugins(JmhPlugin)
-
-lazy val scalacheck    = "org.scalacheck"   %% "scalacheck" % "1.14.0" % "test"
 
