@@ -40,15 +40,22 @@ class ComposeSpec extends FunSuite with Matchers with ScalaCheckDrivenPropertyCh
 
     forAll((bar: Bar) => composed.getOption(bar) shouldEqual bar.foo.asFooIS.map(_.i))
   }
-  
+
+  test("Composition with type inference") {
+    def some[A]: Prism[Option[A], A] = Prism[Option[A], A](identity)(Some(_))
+
+    "Bar.optI compose some" shouldNot compile
+  }
+
 }
 
-case class Bar(i: Int, id: Id, foo: Foo)
+case class Bar(i: Int, id: Id, foo: Foo, optI: Option[Int])
 
 object Bar {
   val i: Lens[Bar, Int] = Lens[Bar, Int](_.i)((bar, newI) => bar.copy(i = newI))
   val id: Lens[Bar, Id] = Lens[Bar, Id](_.id)((bar, newId) => bar.copy(id = newId))
   val foo: Lens[Bar, Foo] = Lens[Bar, Foo](_.foo)((bar, newFoo) => bar.copy(foo = newFoo))
+  val optI: Lens[Bar, Option[Int]] = Lens[Bar, Option[Int]](_.optI)((bar, newOptI) => bar.copy(optI = newOptI))
 
   implicit val arb: Arbitrary[Bar] =
     Arbitrary(
@@ -56,7 +63,8 @@ object Bar {
         i <- arbitrary[Int]
         id <- arbitrary[Id]
         foo <- arbitrary[Foo]
-      } yield Bar(i, id, foo)
+        optI <- arbitrary[Option[Int]]
+      } yield Bar(i, id, foo, optI)
     )
 }
 
